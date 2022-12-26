@@ -1,15 +1,15 @@
 import styles from './App.module.scss'
 import ContentForm from '../ContentForm';
 import Content from '../Content';
-import { changeValueItem } from '../../redux/contentReducer'
+import { changeContent } from '../../redux/contentReducer'
 import { connect } from 'react-redux';
 
 const App = (props) => {
 
-  const{changeValueItem} = props
+  const{changeContent} = props
 
   const submit = (valueForm) => {
-    changeValueItem(valueForm.path, valueForm.newValue)
+    changeContent(valueForm.path, valueForm.newValue)
   }
   return (
     <div className={styles.wrapper}>
@@ -19,6 +19,6 @@ const App = (props) => {
   )
 }
 
-const AppContainer = connect(null, {changeValueItem})(App)
+const AppContainer = connect(null, {changeContent})(App)
 
 export default AppContainer;

@@ -7,12 +7,10 @@ import store from './redux/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
     <Provider store={store}>
       <div className='wrapper'>
         <App />
       </div>
       
     </Provider>
-  </React.StrictMode>
 )

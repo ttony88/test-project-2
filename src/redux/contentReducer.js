@@ -1,5 +1,4 @@
-const CHANGE_VALUE_ITEM = 'content/CHANGE_VALUE_ITEM'
-const SET_NEW_ITEM = 'content/SET_NEW_ITEM'
+const CHANGE_CONTENT = 'content/CHANGE_CONTENT'
 
 let initialState = {
     content: [
@@ -41,7 +40,7 @@ let initialState = {
 const contentReducer = (state=initialState, action) => {
 
     switch (action.type) {
-        case CHANGE_VALUE_ITEM:
+        case CHANGE_CONTENT:
             let path = action.path
             let newValue = eval(`(${action.newValue})`)
             let pathArr = path.split(/\W/).filter(i => i !== '' && i !== 'content')
@@ -63,25 +62,25 @@ const contentReducer = (state=initialState, action) => {
 
             function updateValueElement (arr, item){
 
-                    if (nestingLevel === 1) {
-                        return {
-                            ...item,
-                            props: {...item.props,
-                            [arr[arr.length-1]]: newValue
-                            }    
-                        }
-                    }
-                    nestingLevel--
-                    currentElementNumber++
+                if (nestingLevel === 1) {
                     return {
                         ...item,
-                        content: [...item.content.map(i => {
-                            if(i !== item.content[arr[currentElementNumber]]) return i
-                            return updateValueElement(arr, i)
-                            
-                        })]
+                        props: {...item.props,
+                        [arr[arr.length-1]]: newValue
+                        }    
                     }
                 }
+                nestingLevel--
+                currentElementNumber++
+                return {
+                    ...item,
+                    content: [...item.content.map(i => {
+                        if(i !== item.content[arr[currentElementNumber]]) return i
+                        return updateValueElement(arr, i)
+                        
+                    })]
+                }
+            }
             
             function addNewElement(arr, item){
                 
@@ -105,9 +104,6 @@ const contentReducer = (state=initialState, action) => {
                     }
                 }
             }
-
-        case SET_NEW_ITEM:
-            return
     
         default:
             return state
@@ -115,4 +111,4 @@ const contentReducer = (state=initialState, action) => {
 }
 export default contentReducer
 
-export const changeValueItem = (path, newValue) => ({type: CHANGE_VALUE_ITEM, path, newValue})
+export const changeContent = (path, newValue) => ({type: CHANGE_CONTENT, path, newValue})
