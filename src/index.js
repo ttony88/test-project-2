@@ -11,6 +11,5 @@ root.render(
       <div className='wrapper'>
         <App />
       </div>
-      
     </Provider>
 )

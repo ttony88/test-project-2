@@ -41,70 +41,44 @@ const contentReducer = (state=initialState, action) => {
 
     switch (action.type) {
         case CHANGE_CONTENT:
-            let path = action.path
-            let newValue = eval(`(${action.newValue})`)
-            let pathArr = path.split(/\W/).filter(i => i !== '' && i !== 'content')
-            let nestingLevel = path.split(/\W/).filter(i => i === 'content').length
-            let currentElementNumber = 0
+            let pathArr = action.path.split('.').filter(i => i !== '')
+            let newValue = new Function('return' + `(${action.newValue})`)()
             
-            if(typeof newValue !== 'object'){
-                return {
-                    ...state, 
-                    content: [...state.content.map(contentItem => {
-                        if(contentItem !== state.content[pathArr[0]]){ 
-                            return contentItem
+            return updateContent(pathArr, state) 
+            
+            function updateContent(arr, item){
+
+                for (let itemArr of arr) {
+                    if (itemArr === 'props'){
+                        return {
+                            ...item,
+                            props: {...item.props,
+                            [arr[arr.length - 1]]: newValue
+                            }
                         }
-                        return updateValueElement(pathArr, contentItem)})]
-                }
-                
-            }
-            return addNewElement(pathArr, state)
-
-            function updateValueElement (arr, item){
-
-                if (nestingLevel === 1) {
-                    return {
-                        ...item,
-                        props: {...item.props,
-                        [arr[arr.length-1]]: newValue
-                        }    
-                    }
-                }
-                nestingLevel--
-                currentElementNumber++
-                return {
-                    ...item,
-                    content: [...item.content.map(i => {
-                        if(i !== item.content[arr[currentElementNumber]]) return i
-                        return updateValueElement(arr, i)
+                    } else if (itemArr === 'content'){
+                        return {
+                            ...item,
+                            content: [...item.content, newValue]
+                        }
+                    } 
+                    let elementNumber = itemArr.split(/\W/)
+                    .filter(i => i !== '' && i !== 'content').join()
                         
-                    })]
-                }
-            }
-            
-            function addNewElement(arr, item){
-                
-                if(nestingLevel === 1){
-                    return {
-                        ...item,
-                        content: [...item.content, newValue]
-                    }
-                } else if(nestingLevel > 1){
-                    nestingLevel--
-                    
-                    return {
+                    return{
                         ...item,
                         content: [...item.content.map(i => {
-                            if(i !== item.content[arr[currentElementNumber]]){
-                                currentElementNumber++
+                            if  (i !== item.content[elementNumber]) {
                                 return i
                             }
-                            return addNewElement(arr, i)
+
+                            arr.shift()
+
+                            return updateContent(arr, i)
                         })]
                     }
                 }
             }
-    
         default:
             return state
     }
