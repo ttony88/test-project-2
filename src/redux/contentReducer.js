@@ -3,6 +3,7 @@ const CHANGE_CONTENT = 'content/CHANGE_CONTENT'
 let initialState = {
     content: [
         {
+            id: 1,
             type: 'panel',
             props: {
                 width: 500,
@@ -11,6 +12,7 @@ let initialState = {
             },
             content: [
                 {
+                    id: 2,
                     type: 'label',
                     props: {
                         caption: 'test',
@@ -20,6 +22,7 @@ let initialState = {
             ]
         },
         {
+            id: 3,
             type: 'label',
             props: {
                 caption: 'test',
@@ -27,6 +30,7 @@ let initialState = {
             },
         },
         {
+            id: 4,
             type: 'button',
             props: {
                 width: 100,
@@ -59,7 +63,7 @@ const contentReducer = (state=initialState, action) => {
                     } else if (itemArr === 'content'){
                         return {
                             ...item,
-                            content: [...item.content, newValue]
+                            content: [...item.content, {...newValue, id: Date.now()}]
                         }
                     } 
                     let elementNumber = itemArr.split(/\W/)

@@ -18,19 +18,19 @@ const Content = (props) => {
 }
 
 const createLabel = (item) => {
-    return <span style={{display: item.props.visible ? 'block' : 'none'}}>
+    return <span key={item.id} style={{display: item.props.visible ? 'block' : 'none'}}>
         {item.props.caption}
     </span>
 }
 
 const createButton = (item) => {
-    return <button style={{width: item.props.width, height: item.props.height}}>
+    return <button key={item.id} style={{width: item.props.width, height: item.props.height}}>
         push
     </button>
 }
 
 const createPanel = (item) => {
-    return <div className={styles.panel} style={{width: item.props.width, height: item.props.height}}>
+    return <div key={item.id} className={styles.panel} style={{width: item.props.width, height: item.props.height}}>
         {item.content && item.content.map(i => {
             return renderItemByType(i.type, i)
         })}
@@ -56,7 +56,7 @@ const renderItemByType = (itemType, item) => {
 const mapStateToProps = (state) => {
     return {
         content: getContent(state),
-        renderItemByType: renderItemByType 
+        renderItemByType: renderItemByType
     }
 }
 
